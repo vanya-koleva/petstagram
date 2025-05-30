@@ -19,3 +19,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text[:20]
+
+
+class Like(models.Model):
+    to_photo = models.ForeignKey(
+        Photo,
+        on_delete=models.CASCADE,
+    )
