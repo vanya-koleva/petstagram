@@ -15,8 +15,9 @@
                 </button>
             </form>
             <!-- End Searchbar Form -->
-
-            {% include 'common/pet-post.html' %}
+            {% for photo in all_photos %}
+                {% include 'common/pet-post.html' %}
+            {% endfor %}
 
         </div>
     </div>

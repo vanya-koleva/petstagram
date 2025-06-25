@@ -23,14 +23,14 @@
                 </a>
                 <br>
                 <!-- if the photo has location -->
-                <span>Bansko, Bulgaria</span>
+                <span>{{ photo.location }}</span>
             </h3>
         </div>
         <!--  -->
     </div>
     <!-- Post image -->
-    <div class="imgBx" id="place the id of the photo here">
-        <img src="/static/images/axolotl.jpeg" alt="post" class="cover">
+    <div class="imgBx" id="{{ photo.pk }}">
+        <img src="{{ photo.photo.url }}" alt="post" class="cover">
     </div>
     <!-- -->
 
@@ -58,23 +58,20 @@
         </a>
 
         <!-- tagged pets -->
-        <a href="pet profile">
+        {% for pet in photo.tagged_pets.all %}
+        <a href="{% url 'pet-details' username=request.user.username|default:"anonymous" pet_slug=pet.slug %}">
             <p class="message">
-                <b>Sasho</b>
+                <b>{{ pet.name }}</b>
             </p>
         </a>
-        <a href="pet profile">
-            <p class="message">
-                <b>Some other fish</b>
-            </p>
-        </a>
+        {% endfor %}
         <!--  -->
 
-        <a href="post details">
+        <a href="{% url 'photo-details' pk=photo.pk %}">
             <h4 class="details">See details</h4>
         </a>
 
-        <h5 class="postTime">19/09/2022</h5>
+        <h5 class="postTime">{{ photo.date_of_publication }}</h5>
 
         <!-- add comments section -->
         <div class="addComments">
