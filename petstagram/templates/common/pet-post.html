@@ -73,6 +73,10 @@
 
         <h5 class="postTime">{{ photo.date_of_publication }}</h5>
 
+        {% if comments %}
+            {% include 'common/comments.html' %}
+        {% endif %}
+
         <!-- add comments section -->
         <div class="addComments">
 
