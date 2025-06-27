@@ -47,7 +47,7 @@
                             {% endif %}
                         </a>
                     </span>
-                <a href="share">
+                <a href="{% url 'share' photo_id=photo.pk %}">
                     <i class="fa-solid fa-share"></i>
                 </a>
             </div>

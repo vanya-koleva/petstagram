@@ -1,6 +1,7 @@
 from urllib.request import Request
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, resolve_url
+from pyperclip import copy
 
 from common.models import Like
 from photos.models import Photo
@@ -15,7 +16,7 @@ def home_page_view(request: Request) -> HttpResponse:
     return render(request, 'common/home-page.html', context)
 
 
-def like(request, photo_id: int) -> HttpResponse:
+def like(request: Request, photo_id: int) -> HttpResponse:
     like_object = Like.objects.filter(to_photo_id=photo_id).first()
 
     if like_object:
@@ -24,5 +25,13 @@ def like(request, photo_id: int) -> HttpResponse:
         Like.objects.create(
             to_photo_id=photo_id
         )
+
+    return redirect(request.META.get('HTTP_REFERER') + f'#{photo_id}')
+
+
+def share(request: Request, photo_id: int) -> HttpResponse:
+    # pip install  pyperclip
+    # only works locally
+    copy(request.META.get('HTTP_HOST') + resolve_url('photo-details', photo_id))
 
     return redirect(request.META.get('HTTP_REFERER') + f'#{photo_id}')
