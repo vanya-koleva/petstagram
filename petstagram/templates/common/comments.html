@@ -1,4 +1,5 @@
 <!-- Start Comments Section -->
+{% for comment in comments %}
     <div class="comments">
         <div class="top">
             <div class="userDetails">
@@ -16,12 +17,13 @@
                         <!-- User First and/or Last Name or username-->
                         <a href="">Steven Ivanov</a>
                         <!-- User Comment -->
-                        - OMG where can i get one
+                        - {{ comment.text }}
                     </p>
                 </div>
-                <span>Sept. 20, 2022, 5:02 p.m.</span>
+                <span>{{ comment.date_time_of_publication|date:"M. d, Y, H:m" }}</span>
             </div>
         </div>
     </div>
     <!-- End Comments Section -->
+{% endfor %}
 </div>

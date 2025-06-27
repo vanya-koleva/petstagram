@@ -24,6 +24,26 @@
                 <br>
                 <!-- if the photo has location -->
                 <span>{{ photo.location }}</span>
+
+                <!-- IF the viewer is the creator of the photo -->
+                {% if editable %}
+                    <div class="edit-delete-btns">
+
+                        <!-- Link to Edit Pet Photo Page -->
+                        <a href="{% url 'edit-photo' photo.pk %}">
+                            <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
+                                 alt="edit button">
+                        </a>
+
+                        <!-- Link to Delete Pet Photo Page -->
+                        <a href="#">
+                            <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}"
+                                 alt="bin button">
+                        </a>
+                    </div>
+                {% endif %}
+                <!-- End IF the viewer is the creator of the photo -->
+
             </h3>
         </div>
         <!--  -->
