@@ -88,9 +88,13 @@
         {% endfor %}
         <!--  -->
 
-        <a href="{% url 'photo-details' pk=photo.pk %}">
-            <h4 class="details">See details</h4>
-        </a>
+        <p class="pet-details">{{ photo.description }}</p>
+
+        {% if not editable %}
+            <a href="{% url 'photo-details' pk=photo.pk %}">
+                <h4 class="details">See details</h4>
+            </a>
+        {% endif %}
 
         <h5 class="postTime">{{ photo.date_of_publication }}</h5>
 

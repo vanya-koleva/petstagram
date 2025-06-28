@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 
-from photos.forms import PhotoCreateForm
+from photos.forms import PhotoCreateForm, PhotoEditForm
 from photos.models import Photo
 
 
@@ -32,4 +32,16 @@ def photo_details_view(request: HttpRequest, pk: int) -> HttpResponse:
 
 
 def photo_edit_view(request: HttpRequest, pk: int) -> HttpResponse:
-    return render(request, 'photos/photo-edit-page.html')
+    photo = Photo.objects.get(pk=pk)
+    form = PhotoEditForm(request.POST or None, instance=photo)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('home')
+
+    context = {
+        'form': form,
+        'photo': photo,
+    }
+
+    return render(request, 'photos/photo-edit-page.html', context)
