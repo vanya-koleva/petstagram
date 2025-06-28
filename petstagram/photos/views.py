@@ -45,3 +45,9 @@ def photo_edit_view(request: HttpRequest, pk: int) -> HttpResponse:
     }
 
     return render(request, 'photos/photo-edit-page.html', context)
+
+
+def photo_delete_view(request: HttpRequest, pk: int) -> HttpResponse:
+    photo = Photo.objects.get(pk=pk)
+    photo.delete()
+    return redirect('home')
