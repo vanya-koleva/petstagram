@@ -1,15 +1,25 @@
-from urllib.request import Request
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpRequest
+from django.shortcuts import render, redirect
 
+from photos.forms import PhotoCreateForm
 from photos.models import Photo
 
 
-def photo_add_view(request: Request) -> HttpResponse:
-    return render(request, 'photos/photo-add-page.html')
+def photo_add_view(request: HttpRequest) -> HttpResponse:
+    form = PhotoCreateForm(request.POST or None, request.FILES or None)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('home')
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'photos/photo-add-page.html', context)
 
 
-def photo_details_view(request: Request, pk: int) -> HttpResponse:
+def photo_details_view(request: HttpRequest, pk: int) -> HttpResponse:
     photo = Photo.objects.get(pk=pk)
     comments = photo.comment_set.all()
 
@@ -21,5 +31,5 @@ def photo_details_view(request: Request, pk: int) -> HttpResponse:
     return render(request, 'photos/photo-details-page.html', context)
 
 
-def photo_edit_view(request: Request, pk: int) -> HttpResponse:
+def photo_edit_view(request: HttpRequest, pk: int) -> HttpResponse:
     return render(request, 'photos/photo-edit-page.html')
