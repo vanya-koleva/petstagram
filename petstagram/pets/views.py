@@ -1,23 +1,18 @@
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
 from common.forms import CommentForm
 from pets.forms import PetCreateForm, PetEditForm, PetDeleteForm
 from pets.models import Pet
 
 
-def pet_add_view(request: HttpRequest) -> HttpResponse:
-    form = PetCreateForm(request.POST or None)
-
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('profile-details', pk=1) # Because we don't have users yet
-
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'pets/pet-add-page.html', context)
+class PetAddView(CreateView):
+    model = Pet
+    form_class = PetCreateForm
+    template_name = 'pets/pet-add-page.html'
+    success_url = reverse_lazy('profile-details', kwargs={'pk': 1})
 
 
 def pet_details_view(request: HttpRequest, username: str, pet_slug: str) -> HttpResponse:
