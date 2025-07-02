@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<!-- Starts Main Section -->
 <main>
 
     <div class="pet-profile">
@@ -20,11 +21,11 @@
                         <!-- Pet Name -->
                         <p>{{ pet.name }}</p>
                         <!-- Pet Edit Button -->
-                        <a href="{% url 'edit-pet' username=request.user.username pet_slug=pet.slug %}">
+                        <a href="{% url 'edit-pet' username=request.user.username|default:"anonymous" pet_slug=pet.slug %}">
                             <img class="edit-img" src="{% static 'images/edit-pen-icon-6.jpg' %}" alt="edit button">
                         </a>
                         <!-- Pet Delete Button -->
-                        <a href="{% url 'delete-pet' username=request.user.username pet_slug=pet.slug %}">
+                        <a href="{% url 'delete-pet' username=request.user.username|default:"anonymous" pet_slug=pet.slug %}">
                             <img class="bin-img" src="{% static 'images/icon-remove-22.jpg' %}" alt="bin button">
                         </a>
                     </div>
@@ -44,7 +45,7 @@
 
             {% for photo in all_photos %}
                 {% include 'common/pet-post.html' %}
-            {% empty %} 
+            {% empty %}
                 <img class="no-posts" src="{% static 'images/no_posts.png' %}" alt="no posts image">
             {% endfor %}
         </div>
