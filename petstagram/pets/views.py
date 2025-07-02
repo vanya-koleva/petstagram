@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 
 from common.forms import CommentForm
 from pets.forms import PetCreateForm, PetEditForm, PetDeleteForm
@@ -15,18 +15,17 @@ class PetAddView(CreateView):
     success_url = reverse_lazy('profile-details', kwargs={'pk': 1})
 
 
-def pet_details_view(request: HttpRequest, username: str, pet_slug: str) -> HttpResponse:
-    pet = Pet.objects.get(slug=pet_slug)
-    all_photos = pet.photo_set.prefetch_related('tagged_pets', 'like_set').all()
-    comment_form = CommentForm()
+class PetDetailsView(DetailView):
+    model = Pet
+    template_name = 'pets/pet-details-page.html'
+    slug_url_kwarg = 'pet_slug'
 
-    context = {
-        'pet': pet,
-        'all_photos': all_photos,
-        'comment_form': comment_form,
-    }
-
-    return render(request, 'pets/pet-details-page.html', context)
+    def get_context_data(self, **kwargs) -> dict:
+        kwargs.update({
+            'comment_form': CommentForm(),
+            'all_photos': self.object.photo_set.prefetch_related('tagged_pets', 'like_set').all(),
+        })
+        return super().get_context_data(**kwargs)
 
 
 def pet_edit_view(request: HttpRequest, username: str, pet_slug: str) -> HttpResponse:
