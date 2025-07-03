@@ -1,7 +1,5 @@
-from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from common.forms import CommentForm
 from pets.forms import PetCreateForm, PetEditForm, PetDeleteForm
@@ -44,17 +42,22 @@ class PetEditView(UpdateView):
         )
 
 
-def pet_delete_view(request: HttpRequest, username: str, pet_slug: str) -> HttpResponse:
-    pet = Pet.objects.get(slug=pet_slug)
-    form = PetDeleteForm(instance=pet)
+class PetDeleteView(DeleteView):
+    model = Pet
+    template_name = 'pets/pet-delete-page.html'
+    slug_url_kwarg = 'pet_slug'
+    success_url = reverse_lazy('profile-details', kwargs={'pk': 1})
+    form_class = PetDeleteForm
 
-    if request.method == 'POST':
-        pet.delete()
-        return redirect('profile-details', pk=1)
+    def get_initial(self) -> dict:
+        return self.object.__dict__
 
-    context = {
-        'form': form,
-        'pet': pet,
-    }
+    # Option 1
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'data': self.get_initial()})
+        return kwargs
 
-    return render(request, 'pets/pet-delete-page.html', context)
+    # Option 2
+    # def post(self, request, *args, **kwargs):
+    #     return self.delete(request, *args, **kwargs)
