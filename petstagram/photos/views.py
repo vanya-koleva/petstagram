@@ -1,23 +1,18 @@
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
 from common.forms import CommentForm
 from photos.forms import PhotoCreateForm, PhotoEditForm
 from photos.models import Photo
 
 
-def photo_add_view(request: HttpRequest) -> HttpResponse:
-    form = PhotoCreateForm(request.POST or None, request.FILES or None)
-
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('home')
-
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'photos/photo-add-page.html', context)
+class PhotoAddView(CreateView):
+    model = Photo
+    form_class = PhotoCreateForm
+    template_name = 'photos/photo-add-page.html'
+    success_url = reverse_lazy('home')
 
 
 def photo_details_view(request: HttpRequest, pk: int) -> HttpResponse:

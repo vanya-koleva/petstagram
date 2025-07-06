@@ -13,7 +13,7 @@ class HomePageView(ListView):
     model = Photo
     template_name = 'common/home-page.html'
     context_object_name = 'all_photos'
-    paginate_by = 3
+    paginate_by = 5
 
     def get_context_data(self, *, object_list: list=None, **kwargs) -> dict:
         kwargs.update({
