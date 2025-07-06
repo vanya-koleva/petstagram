@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 
 from common.forms import CommentForm
 from photos.forms import PhotoCreateForm, PhotoEditForm
@@ -27,20 +27,11 @@ class PhotoDetailView(DetailView):
         return super().get_context_data(**kwargs)
 
 
-def photo_edit_view(request: HttpRequest, pk: int) -> HttpResponse:
-    photo = Photo.objects.get(pk=pk)
-    form = PhotoEditForm(request.POST or None, instance=photo)
-
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('home')
-
-    context = {
-        'form': form,
-        'photo': photo,
-    }
-
-    return render(request, 'photos/photo-edit-page.html', context)
+class PhotoEditView(UpdateView):
+    model = Photo
+    form_class = PhotoEditForm
+    template_name = 'photos/photo-edit-page.html'
+    success_url = reverse_lazy('home')
 
 
 def photo_delete_view(request: HttpRequest, pk: int) -> HttpResponse:
